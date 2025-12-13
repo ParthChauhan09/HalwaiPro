@@ -106,4 +106,63 @@ describe('Auth Endpoints', () => {
             expect(res.body.user).toHaveProperty('role', 'staff');
         });
     });
+    describe('POST /api/auth/login', () => {
+        it('should login successfully with valid credentials', async () => {
+            // First register a user
+            await request(app)
+                .post('/api/auth/register')
+                .send({
+                    name: 'Login User',
+                    email: 'login@example.com',
+                    password: 'password123',
+                    role: 'customer'
+                });
+
+            // Then login
+            const res = await request(app)
+                .post('/api/auth/login')
+                .send({
+                    email: 'login@example.com',
+                    password: 'password123'
+                });
+
+            expect(res.statusCode).toBe(200);
+            expect(res.body).toHaveProperty('token');
+            expect(res.body.user).toHaveProperty('email', 'login@example.com');
+        });
+
+        it('should fail with invalid password', async () => {
+            // First register a user
+            await request(app)
+                .post('/api/auth/register')
+                .send({
+                    name: 'Login User 2',
+                    email: 'login2@example.com',
+                    password: 'password123',
+                    role: 'customer'
+                });
+
+            const res = await request(app)
+                .post('/api/auth/login')
+                .send({
+                    email: 'login2@example.com',
+                    password: 'wrongpassword'
+                });
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toHaveProperty('message', 'Invalid credentials');
+        });
+
+        it('should fail with non-existent user', async () => {
+            const res = await request(app)
+                .post('/api/auth/login')
+                .send({
+                    email: 'nonexistent@example.com',
+                    password: 'password123'
+                });
+
+            expect(res.statusCode).toBe(401);
+            expect(res.body).toHaveProperty('message', 'Invalid credentials');
+        });
+    });
 });
