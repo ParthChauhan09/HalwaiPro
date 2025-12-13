@@ -10,6 +10,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 import authRoutes from './routes/auth.routes.js';
+import sweetRoutes from './routes/sweet.routes.js';
 
 // Middleware
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/sweets', sweetRoutes);
 
 app.get('/api/health', (req, res) => {
     res.status(200).json({
