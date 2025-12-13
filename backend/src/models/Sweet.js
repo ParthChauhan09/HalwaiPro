@@ -42,6 +42,6 @@ const sweetSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
-})
+});
 
 export default mongoose.model('Sweet', sweetSchema);

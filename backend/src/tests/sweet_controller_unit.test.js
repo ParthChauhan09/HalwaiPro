@@ -20,7 +20,6 @@ const { default: sweetController } = await import('../controllers/sweet.controll
 
 describe('Sweet Controller Unit Tests (Error Handling)', () => {
     let req, res, next;
-    let consoleErrorSpy;
 
     beforeEach(() => {
         req = {
@@ -33,7 +32,7 @@ describe('Sweet Controller Unit Tests (Error Handling)', () => {
             json: jest.fn()
         };
         next = jest.fn();
-        consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+        jest.spyOn(console, 'error').mockImplementation(() => { });
         jest.clearAllMocks();
     });
 

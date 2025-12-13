@@ -33,9 +33,9 @@ const userSchema = new mongoose.Schema({
         default: 'staff'
     }
 },
-    {
-        timestamps: true
-    }
+{
+    timestamps: true
+}
 );
 
 
@@ -53,7 +53,7 @@ userSchema.pre('save', async function () {
 
 userSchema.methods.matchPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
-}
+};
 
 
 export default mongoose.model('User', userSchema);

@@ -14,7 +14,6 @@ const { default: authController } = await import('../controllers/auth.controller
 
 describe('Auth Controller Unit Tests (Error Handling)', () => {
     let req, res, next;
-    let consoleErrorSpy;
 
     beforeEach(() => {
         req = {
@@ -25,7 +24,7 @@ describe('Auth Controller Unit Tests (Error Handling)', () => {
             json: jest.fn()
         };
         next = jest.fn();
-        consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+        jest.spyOn(console, 'error').mockImplementation(() => { });
         jest.clearAllMocks();
     });
 

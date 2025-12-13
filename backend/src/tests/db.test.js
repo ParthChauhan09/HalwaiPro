@@ -21,18 +21,15 @@ const { default: connectDB } = await import('../config/db.js');
 const { default: config } = await import('../config/env.js');
 
 describe('DB Connection', () => {
-    let consoleLogSpy;
-    let consoleErrorSpy;
-    let consoleWarnSpy;
-    let processExitSpy;
-    let processOnSpy;
+
+    let consoleLogSpy, processExitSpy;
 
     beforeAll(() => {
         consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
-        consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-        consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => { });
+        jest.spyOn(console, 'error').mockImplementation(() => { });
+        jest.spyOn(console, 'warn').mockImplementation(() => { });
         processExitSpy = jest.spyOn(process, 'exit').mockImplementation(() => { });
-        processOnSpy = jest.spyOn(process, 'on').mockImplementation((event, callback) => {
+        jest.spyOn(process, 'on').mockImplementation((_event, _callback) => {
             // No-op for SIGINT to prevent test exit
         });
     });
