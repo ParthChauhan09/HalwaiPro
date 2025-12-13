@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Name is required'],
         trim: true,
-        min: [3, 'Name must be at least 3 characters long'],
-        max: [30, 'Name must be at most 30 characters long']
+        minLength: [3, 'Name must be at least 3 characters long'],
+        maxLength: [30, 'Name must be at most 30 characters long']
     },
     email: {
         type: String,
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        min: [6, 'Password must be at least 6 characters long'],
+        minLength: [6, 'Password must be at least 6 characters long'],
         select: false
     },
     role: {

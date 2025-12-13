@@ -66,5 +66,44 @@ describe('Auth Endpoints', () => {
 
             expect(res.statusCode).toBe(409);
         });
+
+        it('should fail with invalid email format', async () => {
+            const res = await request(app)
+                .post('/api/auth/register')
+                .send({
+                    name: 'Test User',
+                    email: 'invalid-email',
+                    password: 'password123',
+                    role: 'customer'
+                });
+
+            expect(res.statusCode).toBe(500);
+        });
+
+        it('should fail with short password', async () => {
+            const res = await request(app)
+                .post('/api/auth/register')
+                .send({
+                    name: 'Test User',
+                    email: 'shortpass@example.com',
+                    password: '123',
+                    role: 'customer'
+                });
+
+            expect(res.statusCode).toBe(500);
+        });
+
+        it('should assign default role if not specified', async () => {
+            const res = await request(app)
+                .post('/api/auth/register')
+                .send({
+                    name: 'Default Role User',
+                    email: 'defaultrole@example.com',
+                    password: 'password123'
+                });
+
+            expect(res.statusCode).toBe(201);
+            expect(res.body.user).toHaveProperty('role', 'staff');
+        });
     });
 });
