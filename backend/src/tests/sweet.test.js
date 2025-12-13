@@ -244,10 +244,10 @@ describe('Sweet Endpoints', () => {
             expect(res.statusCode).toBe(404);
         });
 
-        // Invalid ID format tests (Expect 500 due to CastError caught in controller)
+        // Invalid ID format tests (Expect 404 due to CastError handled in middleware)
         it('should handle invalid ID format gracefully (Get)', async () => {
             const res = await request(app).get(`/api/sweets/${invalidId}`);
-            expect(res.statusCode).toBe(500); // Controller catches CastError
+            expect(res.statusCode).toBe(404);
         });
     });
 

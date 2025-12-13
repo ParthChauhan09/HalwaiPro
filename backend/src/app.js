@@ -16,6 +16,8 @@ import sweetRoutes from './routes/sweet.routes.js';
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+import { notFound, errorHandler } from './middlewares/error.middleware.js';
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/sweets', sweetRoutes);
@@ -26,5 +28,8 @@ app.get('/api/health', (req, res) => {
         message: 'Backend is running'
     });
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;

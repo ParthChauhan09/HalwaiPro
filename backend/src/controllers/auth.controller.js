@@ -1,7 +1,7 @@
 import userService from '../services/user.service.js';
 
 class AuthController {
-    async register(req, res) {
+    async register(req, res, next) {
         try {
             const { name, email, password, role } = req.body;
 
@@ -14,15 +14,11 @@ class AuthController {
 
             res.status(201).json(result);
         } catch (error) {
-            if (process.env.NODE_ENV !== 'test') {
-                console.error('AUTH ERROR:', error);
-            }
-            const statusCode = error.statusCode || 500;
-            res.status(statusCode).json({ message: error.message });
+            next(error);
         }
     }
 
-    async login(req, res) {
+    async login(req, res, next) {
         try {
             const { email, password } = req.body;
 
@@ -34,11 +30,7 @@ class AuthController {
 
             res.status(200).json(result);
         } catch (error) {
-            if (process.env.NODE_ENV !== 'test') {
-                console.error('AUTH ERROR:', error);
-            }
-            const statusCode = error.statusCode || 500;
-            res.status(statusCode).json({ message: error.message });
+            next(error);
         }
     }
 }

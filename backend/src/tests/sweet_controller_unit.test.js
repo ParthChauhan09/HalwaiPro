@@ -19,7 +19,7 @@ await jest.unstable_mockModule('../services/sweet.service.js', () => ({
 const { default: sweetController } = await import('../controllers/sweet.controller.js');
 
 describe('Sweet Controller Unit Tests (Error Handling)', () => {
-    let req, res;
+    let req, res, next;
     let consoleErrorSpy;
 
     beforeEach(() => {
@@ -32,6 +32,7 @@ describe('Sweet Controller Unit Tests (Error Handling)', () => {
             status: jest.fn().mockReturnThis(),
             json: jest.fn()
         };
+        next = jest.fn();
         consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
         jest.clearAllMocks();
     });
@@ -40,62 +41,69 @@ describe('Sweet Controller Unit Tests (Error Handling)', () => {
         jest.restoreAllMocks();
     });
 
-    it('createSweet should return 500 on service error', async () => {
+    it('createSweet should call next(error) on service error', async () => {
         req.body = { name: 'Test', price: 10, description: 'Desc', category: 'Cat', imageUrl: 'Img' };
-        mockSweetService.createSweet.mockRejectedValue(new Error('Service Error'));
+        const error = new Error('Service Error');
+        mockSweetService.createSweet.mockRejectedValue(error);
 
-        await sweetController.createSweet(req, res);
+        await sweetController.createSweet(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ message: 'Service Error' });
+        expect(next).toHaveBeenCalledWith(error);
     });
 
-    it('getAllSweets should return 500 on service error', async () => {
-        mockSweetService.getAllSweets.mockRejectedValue(new Error('Service Error'));
-        await sweetController.getAllSweets(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
+    it('getAllSweets should call next(error) on service error', async () => {
+        const error = new Error('Service Error');
+        mockSweetService.getAllSweets.mockRejectedValue(error);
+        await sweetController.getAllSweets(req, res, next);
+        expect(next).toHaveBeenCalledWith(error);
     });
 
-    it('getSweetById should return 500 on service error', async () => {
+    it('getSweetById should call next(error) on service error', async () => {
         req.params.id = '123';
-        mockSweetService.getSweetById.mockRejectedValue(new Error('Service Error'));
-        await sweetController.getSweetById(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
+        const error = new Error('Service Error');
+        mockSweetService.getSweetById.mockRejectedValue(error);
+        await sweetController.getSweetById(req, res, next);
+        expect(next).toHaveBeenCalledWith(error);
     });
 
-    it('searchSweets should return 500 on service error', async () => {
-        mockSweetService.searchSweets.mockRejectedValue(new Error('Service Error'));
-        await sweetController.searchSweets(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
+    it('searchSweets should call next(error) on service error', async () => {
+        const error = new Error('Service Error');
+        mockSweetService.searchSweets.mockRejectedValue(error);
+        await sweetController.searchSweets(req, res, next);
+        expect(next).toHaveBeenCalledWith(error);
     });
 
-    it('updateSweet should return 500 on service error', async () => {
+    it('updateSweet should call next(error) on service error', async () => {
         req.params.id = '123';
-        mockSweetService.updateSweet.mockRejectedValue(new Error('Service Error'));
-        await sweetController.updateSweet(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
+        const error = new Error('Service Error');
+        mockSweetService.updateSweet.mockRejectedValue(error);
+        await sweetController.updateSweet(req, res, next);
+        expect(next).toHaveBeenCalledWith(error);
     });
 
-    it('deleteSweet should return 500 on service error', async () => {
+    it('deleteSweet should call next(error) on service error', async () => {
         req.params.id = '123';
-        mockSweetService.deleteSweet.mockRejectedValue(new Error('Service Error'));
-        await sweetController.deleteSweet(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
+        const error = new Error('Service Error');
+        mockSweetService.deleteSweet.mockRejectedValue(error);
+        await sweetController.deleteSweet(req, res, next);
+        expect(next).toHaveBeenCalledWith(error);
     });
 
-    it('purchaseSweet should return 500 on service error', async () => {
-        req.params.id = '123';
-        req.body.quantity = 1;
-        mockSweetService.purchaseSweet.mockRejectedValue(new Error('Service Error'));
-        await sweetController.purchaseSweet(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
-    });
-
-    it('restockSweet should return 500 on service error', async () => {
+    it('purchaseSweet should call next(error) on service error', async () => {
         req.params.id = '123';
         req.body.quantity = 1;
-        mockSweetService.restockSweet.mockRejectedValue(new Error('Service Error'));
-        await sweetController.restockSweet(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
+        const error = new Error('Service Error');
+        mockSweetService.purchaseSweet.mockRejectedValue(error);
+        await sweetController.purchaseSweet(req, res, next);
+        expect(next).toHaveBeenCalledWith(error);
+    });
+
+    it('restockSweet should call next(error) on service error', async () => {
+        req.params.id = '123';
+        req.body.quantity = 1;
+        const error = new Error('Service Error');
+        mockSweetService.restockSweet.mockRejectedValue(error);
+        await sweetController.restockSweet(req, res, next);
+        expect(next).toHaveBeenCalledWith(error);
     });
 });
