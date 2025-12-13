@@ -36,6 +36,42 @@ class UserService {
         };
     }
 
+    async login(email, password) {
+        // Find user
+        const user = await userRepository.findByEmail(email);
+        if (!user) {
+            const error = new Error('Invalid credentials');
+            error.statusCode = 401;
+            throw error;
+        }
+
+        const userWithPassword = await userRepository.findUserForLogin(email);
+        if (!userWithPassword) {
+            const error = new Error('Invalid credentials');
+            error.statusCode = 401;
+            throw error;
+        }
+
+        const isMatch = await userWithPassword.matchPassword(password);
+        if (!isMatch) {
+            const error = new Error('Invalid credentials');
+            error.statusCode = 401;
+            throw error;
+        }
+
+        const token = this.generateToken(userWithPassword._id);
+
+        return {
+            user: {
+                _id: userWithPassword._id,
+                name: userWithPassword.name,
+                email: userWithPassword.email,
+                role: userWithPassword.role
+            },
+            token
+        };
+    }
+
     generateToken(id) {
         return jwt.sign({ id }, config.jwt.secret, {
             expiresIn: config.jwt.expiresIn

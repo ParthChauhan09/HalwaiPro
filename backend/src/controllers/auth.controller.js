@@ -21,6 +21,26 @@ class AuthController {
             res.status(statusCode).json({ message: error.message });
         }
     }
+
+    async login(req, res) {
+        try {
+            const { email, password } = req.body;
+
+            if (!email || !password) {
+                return res.status(400).json({ message: 'Missing required fields' });
+            }
+
+            const result = await userService.login(email, password);
+
+            res.status(200).json(result);
+        } catch (error) {
+            if (process.env.NODE_ENV !== 'test') {
+                console.error('AUTH ERROR:', error);
+            }
+            const statusCode = error.statusCode || 500;
+            res.status(statusCode).json({ message: error.message });
+        }
+    }
 }
 
 export default new AuthController();

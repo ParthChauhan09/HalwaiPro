@@ -13,6 +13,12 @@ class UserRepository {
         return user;
     }
 
+    // Find for login (include password)
+    async findUserForLogin(email) {
+        const user = await User.findOne({ email }).select('+password');
+        return user;
+    }
+
     // Finf by Id
     async findById(id) {
         const user = await User.findById(id);
