@@ -18,7 +18,9 @@ const connectDB = async () => {
 
 // Successfully connected
 mongoose.connection.on("connected", () => {
-  console.log("Mongoose connected to MongoDB");
+  if (process.env.NODE_ENV !== 'test') {
+    console.log('Mongoose connected to MongoDB');
+  }
 });
 
 // Connection throws an error
@@ -28,7 +30,9 @@ mongoose.connection.on("error", (err) => {
 
 // Connection is disconnected
 mongoose.connection.on("disconnected", () => {
-  console.warn("Mongoose disconnected from MongoDB");
+  if (process.env.NODE_ENV !== 'test') {
+    console.warn('Mongoose disconnected from MongoDB');
+  }
 });
 
 // Graceful shutdown (Ctrl + C, server restart, etc.)

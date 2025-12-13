@@ -25,15 +25,14 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true,
         min: [6, 'Password must be at least 6 characters long'],
-        max: [32, 'Password must be at most 32 characters long'],
         select: false
     },
     role: {
         type: String,
-        enum: ['staff', 'admin'],
+        enum: ['staff', 'admin', 'customer'],
         default: 'staff'
     }
-},  
+},
     {
         timestamps: true
     }
@@ -42,18 +41,17 @@ const userSchema = new mongoose.Schema({
 
 // Presaving
 
-userSchema.pre('save', async function(next){
-    if(!this.isModified('password')) return next;
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) return;
 
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
-})
+});
 
 
 // Match Password
 
-userSchema.methods.matchPassword = async function(password){
+userSchema.methods.matchPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 
