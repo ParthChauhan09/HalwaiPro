@@ -93,6 +93,42 @@ class SweetController {
             res.status(statusCode).json({ message: error.message });
         }
     }
+
+    async purchaseSweet(req, res) {
+        try {
+            const { quantity } = req.body;
+            if (!quantity || quantity <= 0) {
+                return res.status(400).json({ message: 'Invalid quantity' });
+            }
+
+            const sweet = await sweetService.purchaseSweet(req.params.id, quantity);
+            res.status(200).json(sweet);
+        } catch (error) {
+            if (process.env.NODE_ENV !== 'test') {
+                console.error('Purchase Sweet Error:', error);
+            }
+            const statusCode = error.statusCode || 500;
+            res.status(statusCode).json({ message: error.message });
+        }
+    }
+
+    async restockSweet(req, res) {
+        try {
+            const { quantity } = req.body;
+            if (!quantity || quantity <= 0) {
+                return res.status(400).json({ message: 'Invalid quantity' });
+            }
+
+            const sweet = await sweetService.restockSweet(req.params.id, quantity);
+            res.status(200).json(sweet);
+        } catch (error) {
+            if (process.env.NODE_ENV !== 'test') {
+                console.error('Restock Sweet Error:', error);
+            }
+            const statusCode = error.statusCode || 500;
+            res.status(statusCode).json({ message: error.message });
+        }
+    }
 }
 
 export default new SweetController();

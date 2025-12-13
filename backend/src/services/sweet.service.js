@@ -57,6 +57,34 @@ class SweetService {
         }
         return sweet;
     }
+
+    async purchaseSweet(id, quantity) {
+        // Check availability first
+        const sweet = await sweetRepository.findById(id);
+        if (!sweet) {
+            const error = new Error('Sweet not found');
+            error.statusCode = 404;
+            throw error;
+        }
+        if (sweet.stockQuantity < quantity) {
+            const error = new Error('Insufficient stock');
+            error.statusCode = 400; // Bad request
+            throw error;
+        }
+
+        const updatedSweet = await sweetRepository.decreaseStock(id, quantity);
+        return updatedSweet;
+    }
+
+    async restockSweet(id, quantity) {
+        const sweet = await sweetRepository.increaseStock(id, quantity);
+        if (!sweet) {
+            const error = new Error('Sweet not found');
+            error.statusCode = 404;
+            throw error;
+        }
+        return sweet;
+    }
 }
 
 export default new SweetService();
