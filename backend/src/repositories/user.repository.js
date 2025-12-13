@@ -34,12 +34,18 @@ class UserRepository {
 
     // All Users
     async findAll(filter = {}) {
-        const users = (await User.find(filter)).sort({ createdAt: -1 });
+        const users = await User.find(filter).sort({ createdAt: -1 });
         return users;
     }
 
+    // Update User
+    async update(id, updateData) {
+        const user = await User.findByIdAndUpdate(id, updateData, { new: true });
+        return user;
+    }
+
     // Delete User
-    async deleteById(id) {
+    async delete(id) {
         const user = await User.findByIdAndDelete(id);
         return user;
     }
