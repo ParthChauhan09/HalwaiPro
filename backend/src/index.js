@@ -1,10 +1,7 @@
-import dotenv from 'dotenv';
 import express from 'express';
-
-dotenv.config();
+import config from './config/env.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -17,6 +14,6 @@ app.get('/api/health', (req, res) => {
 
 // Start server
 // eslint-disable-next-line no-console
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`);
 });
