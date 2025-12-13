@@ -20,6 +20,10 @@ const config = {
   database: {
     mongoUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/halwaipro',
   },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'secret',
+    expiresIn: process.env.JWT_EXPIRES_IN || '30d',
+  },
 };
 
 export default config;
