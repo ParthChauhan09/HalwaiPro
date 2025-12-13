@@ -1,7 +1,11 @@
 import express from 'express';
 import config from './config/env.js';
+import connectDB from './config/db.js';
 
 const app = express();
+
+// Database
+connectDB();
 
 // Middleware
 app.use(express.json());
@@ -9,7 +13,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'Backend is running' });
+  res.status(200).json({ 
+    success: true,
+    message: 'Backend is running' });
 });
 
 // Start server
