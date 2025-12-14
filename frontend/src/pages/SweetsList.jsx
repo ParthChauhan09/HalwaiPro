@@ -172,10 +172,22 @@ const SweetsList = () => {
                                     </span>
                                 </div>
                                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">{sweet.description}</p>
-                                <div className="flex justify-between items-center">
+                                <div className="flex justify-between items-center mt-4">
                                     <span className="text-2xl font-bold text-gray-900">₹{sweet.price}</span>
-                                    {!sweet.isAvailable && (
-                                        <span className="text-red-500 text-sm font-medium">Out of Stock</span>
+                                    {sweet.stockQuantity > 0 ? (
+                                        <button
+                                            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors duration-300 transform hover:scale-105"
+                                            onClick={() => toast.success(`Added ${sweet.name} to cart`)}
+                                        >
+                                            Purchase
+                                        </button>
+                                    ) : (
+                                        <button
+                                            disabled
+                                            className="bg-gray-300 text-gray-500 px-4 py-2 rounded-md cursor-not-allowed"
+                                        >
+                                            Out of Stock
+                                        </button>
                                     )}
                                 </div>
                             </div>
