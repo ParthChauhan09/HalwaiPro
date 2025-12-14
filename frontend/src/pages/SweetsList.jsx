@@ -13,7 +13,7 @@ const SweetsList = () => {
     const fetchSweets = async () => {
         try {
             const response = await api.get('/sweets');
-            setSweets(response.data.data);
+            setSweets(response.data);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching sweets:', error);
