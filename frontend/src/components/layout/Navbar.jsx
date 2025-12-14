@@ -22,7 +22,7 @@ const Navbar = () => {
                         </Link>
                         <div className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-4">
-                                <Link to="/dashboard" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-bakery-light-brown hover:text-white transition-colors">Dashboard</Link>
+                                <Link to="/dashboard" className="px-3 py-2 rounded-md text-sm font-bold bg-bakery-orange text-white hover:bg-bakery-light-brown transition-colors shadow-sm">Dashboard</Link>
                                 <Link to="/sweets" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-bakery-light-brown hover:text-white transition-colors">Sweets</Link>
                             </div>
                         </div>
