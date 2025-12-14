@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
-import { Package, AlertTriangle, TrendingUp, DollarSign, Plus } from 'lucide-react';
+import { Package, AlertTriangle, TrendingUp, DollarSign, Plus, Pencil, Trash2 } from 'lucide-react';
 import AddSweetModal from '../components/sweets/AddSweetModal';
+import DeleteConfirmationModal from '../components/common/DeleteConfirmationModal';
 
 const Dashboard = () => {
     const [sweets, setSweets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showLowStockOnly, setShowLowStockOnly] = useState(false);
+
+    // Modal States
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [editingSweet, setEditingSweet] = useState(null);
+    const [deletingSweet, setDeletingSweet] = useState(null);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const fetchSweets = async () => {
         try {
@@ -33,6 +39,36 @@ const Dashboard = () => {
             fetchSweets(); // Refresh data
         } catch (error) {
             toast.error('Failed to restock');
+        }
+    };
+
+    const handleEdit = (sweet) => {
+        setEditingSweet(sweet);
+        setIsAddModalOpen(true);
+    };
+
+    const handleAdd = () => {
+        setEditingSweet(null);
+        setIsAddModalOpen(true);
+    };
+
+    const handleDeleteClick = (sweet) => {
+        setDeletingSweet(sweet);
+    };
+
+    const confirmDelete = async () => {
+        if (!deletingSweet) return;
+        setDeleteLoading(true);
+        try {
+            await api.delete(`/sweets/${deletingSweet._id}`);
+            toast.success('Product deleted successfully');
+            fetchSweets();
+            setDeletingSweet(null);
+        } catch (error) {
+            console.error('Delete error:', error);
+            toast.error('Failed to delete product');
+        } finally {
+            setDeleteLoading(false);
         }
     };
 
@@ -76,6 +112,15 @@ const Dashboard = () => {
                     isOpen={isAddModalOpen}
                     onClose={() => setIsAddModalOpen(false)}
                     onSuccess={fetchSweets}
+                    sweetToEdit={editingSweet}
+                />
+
+                <DeleteConfirmationModal
+                    isOpen={!!deletingSweet}
+                    onClose={() => setDeletingSweet(null)}
+                    onConfirm={confirmDelete}
+                    sweetName={deletingSweet?.name}
+                    loading={deleteLoading}
                 />
 
                 {/* Stats Grid */}
@@ -188,12 +233,29 @@ const Dashboard = () => {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <button
-                                                    onClick={() => handleRestock(item._id)}
-                                                    className="text-sm bg-bakery-brown text-white px-4 py-2 rounded-lg hover:bg-bakery-orange transition-colors shadow-sm"
-                                                >
-                                                    Restock (+20)
-                                                </button>
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <button
+                                                        onClick={() => handleRestock(item._id)}
+                                                        className="text-xs bg-bakery-brown text-white px-3 py-1.5 rounded-lg hover:bg-bakery-orange transition-colors shadow-sm"
+                                                        title="Quick Restock (+20)"
+                                                    >
+                                                        +20
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleEdit(item)}
+                                                        className="p-1.5 text-bakery-light-brown hover:text-bakery-brown hover:bg-bakery-brown/10 rounded-lg transition-colors"
+                                                        title="Edit Product"
+                                                    >
+                                                        <Pencil className="w-4 h-4" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteClick(item)}
+                                                        className="p-1.5 text-bakery-light-brown hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                        title="Delete Product"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))

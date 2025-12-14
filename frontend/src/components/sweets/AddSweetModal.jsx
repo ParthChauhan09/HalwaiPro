@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
 
-const AddSweetModal = ({ isOpen, onClose, onSuccess }) => {
+const AddSweetModal = ({ isOpen, onClose, onSuccess, sweetToEdit }) => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -13,6 +13,28 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess }) => {
         imageUrl: ''
     });
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (sweetToEdit) {
+            setFormData({
+                name: sweetToEdit.name,
+                description: sweetToEdit.description,
+                price: sweetToEdit.price,
+                stockQuantity: sweetToEdit.stockQuantity,
+                category: sweetToEdit.category,
+                imageUrl: sweetToEdit.imageUrl
+            });
+        } else {
+            setFormData({
+                name: '',
+                description: '',
+                price: '',
+                stockQuantity: '',
+                category: 'Milk Based',
+                imageUrl: ''
+            });
+        }
+    }, [sweetToEdit, isOpen]);
 
     if (!isOpen) return null;
 
@@ -29,26 +51,26 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess }) => {
         setLoading(true);
 
         try {
-            await api.post('/sweets', {
+            const data = {
                 ...formData,
                 price: Number(formData.price),
                 stockQuantity: Number(formData.stockQuantity),
                 isAvailable: Number(formData.stockQuantity) > 0
-            });
-            toast.success('Sweet added successfully!');
+            };
+
+            if (sweetToEdit) {
+                await api.put(`/sweets/${sweetToEdit._id}`, data);
+                toast.success('Sweet updated successfully!');
+            } else {
+                await api.post('/sweets', data);
+                toast.success('Sweet added successfully!');
+            }
+
             onSuccess();
             onClose();
-            setFormData({
-                name: '',
-                description: '',
-                price: '',
-                stockQuantity: '',
-                category: 'Milk Based',
-                imageUrl: ''
-            });
         } catch (error) {
-            console.error('Error adding sweet:', error);
-            toast.error(error.response?.data?.message || 'Failed to add sweet');
+            console.error('Error saving sweet:', error);
+            toast.error(error.response?.data?.message || 'Failed to save sweet');
         } finally {
             setLoading(false);
         }
@@ -58,7 +80,7 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
             <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all scale-100 animate-slide-up border border-bakery-brown/10">
                 <div className="flex justify-between items-center p-6 border-b border-bakery-brown/5 bg-bakery-cream/30">
-                    <h2 className="text-2xl font-bold text-bakery-brown">Add New Sweet</h2>
+                    <h2 className="text-2xl font-bold text-bakery-brown">{sweetToEdit ? 'Edit Sweet' : 'Add New Sweet'}</h2>
                     <button
                         onClick={onClose}
                         className="p-2 rounded-full hover:bg-bakery-brown/10 text-bakery-light-brown transition-colors"
@@ -163,7 +185,7 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess }) => {
                                     Creating...
                                 </>
                             ) : (
-                                'Add Product'
+                                sweetToEdit ? 'Update Product' : 'Add Product'
                             )}
                         </button>
                     </div>
