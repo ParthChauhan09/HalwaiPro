@@ -2,7 +2,11 @@ import express from 'express';
 
 import connectDB from './config/db.js';
 
+import cors from 'cors';
+
 const app = express();
+
+app.use(cors());
 
 // Database connection - skip in test environment to allow manual control in tests
 if (process.env.NODE_ENV !== 'test') {
