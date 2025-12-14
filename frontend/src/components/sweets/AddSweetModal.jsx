@@ -91,9 +91,10 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess, sweetToEdit }) => {
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-5">
                     <div>
-                        <label className="block text-sm font-semibold text-bakery-brown mb-1">Product Name</label>
+                        <label htmlFor="name" className="block text-sm font-semibold text-bakery-brown mb-1">Product Name</label>
                         <input
                             type="text"
+                            id="name"
                             name="name"
                             required
                             value={formData.name}
@@ -105,9 +106,10 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess, sweetToEdit }) => {
 
                     <div className="grid grid-cols-2 gap-5">
                         <div>
-                            <label className="block text-sm font-semibold text-bakery-brown mb-1">Price (₹)</label>
+                            <label htmlFor="price" className="block text-sm font-semibold text-bakery-brown mb-1">Price (₹)</label>
                             <input
                                 type="number"
+                                id="price"
                                 name="price"
                                 required
                                 min="0"
@@ -118,9 +120,10 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess, sweetToEdit }) => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-bakery-brown mb-1">Initial Stock</label>
+                            <label htmlFor="stockQuantity" className="block text-sm font-semibold text-bakery-brown mb-1">Initial Stock</label>
                             <input
                                 type="number"
+                                id="stockQuantity"
                                 name="stockQuantity"
                                 required
                                 min="0"
@@ -133,8 +136,9 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess, sweetToEdit }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-bakery-brown mb-1">Category</label>
+                        <label htmlFor="category" className="block text-sm font-semibold text-bakery-brown mb-1">Category</label>
                         <select
+                            id="category"
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
@@ -148,9 +152,10 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess, sweetToEdit }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-bakery-brown mb-1">Image URL</label>
+                        <label htmlFor="imageUrl" className="block text-sm font-semibold text-bakery-brown mb-1">Image URL</label>
                         <input
                             type="text"
+                            id="imageUrl"
                             name="imageUrl"
                             required
                             value={formData.imageUrl}
@@ -161,8 +166,9 @@ const AddSweetModal = ({ isOpen, onClose, onSuccess, sweetToEdit }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-bakery-brown mb-1">Description</label>
+                        <label htmlFor="description" className="block text-sm font-semibold text-bakery-brown mb-1">Description</label>
                         <textarea
+                            id="description"
                             name="description"
                             required
                             value={formData.description}
