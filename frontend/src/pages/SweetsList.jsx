@@ -48,6 +48,27 @@ const SweetsList = () => {
         fetchSweets(filters);
     };
 
+    const handlePurchase = async (sweetId) => {
+        try {
+            await api.post(`/sweets/${sweetId}/purchase`, { quantity: 1 });
+            toast.success('Purchase successful!');
+
+            setSweets(prevSweets => prevSweets.map(sweet => {
+                if (sweet._id === sweetId) {
+                    return {
+                        ...sweet,
+                        stockQuantity: sweet.stockQuantity - 1
+                    };
+                }
+                return sweet;
+            }));
+        } catch (error) {
+            console.error('Purchase error:', error);
+            const message = error.response?.data?.message || 'Failed to purchase';
+            toast.error(message);
+        }
+    };
+
     const handleReset = () => {
         const resetFilters = {
             name: '',
@@ -172,12 +193,15 @@ const SweetsList = () => {
                                     </span>
                                 </div>
                                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">{sweet.description}</p>
+                                <div className="text-sm text-gray-500 mb-2">
+                                    Stock: <span className="font-medium text-gray-900">{sweet.stockQuantity}</span>
+                                </div>
                                 <div className="flex justify-between items-center mt-4">
                                     <span className="text-2xl font-bold text-gray-900">₹{sweet.price}</span>
                                     {sweet.stockQuantity > 0 ? (
                                         <button
                                             className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors duration-300 transform hover:scale-105"
-                                            onClick={() => toast.success(`Added ${sweet.name} to cart`)}
+                                            onClick={() => handlePurchase(sweet._id)}
                                         >
                                             Purchase
                                         </button>
