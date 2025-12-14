@@ -23,7 +23,7 @@ describe('Auth Endpoints', () => {
                     name: 'Test User',
                     email: 'test@example.com',
                     password: 'password123',
-                    role: 'customer'
+                    role: 'staff'
                 });
 
             expect(res.statusCode).toBe(201);
@@ -37,7 +37,7 @@ describe('Auth Endpoints', () => {
                 .send({
                     name: 'Test User',
                     password: 'password123',
-                    role: 'customer'
+                    role: 'staff'
                 });
 
             expect(res.statusCode).toBe(400);
@@ -51,7 +51,7 @@ describe('Auth Endpoints', () => {
                     name: 'Test User',
                     email: 'duplicate@example.com',
                     password: 'password123',
-                    role: 'customer'
+                    role: 'staff'
                 });
 
             // Try again
@@ -61,7 +61,7 @@ describe('Auth Endpoints', () => {
                     name: 'Test User 2',
                     email: 'duplicate@example.com',
                     password: 'password123',
-                    role: 'customer'
+                    role: 'staff'
                 });
 
             expect(res.statusCode).toBe(409);
@@ -74,7 +74,7 @@ describe('Auth Endpoints', () => {
                     name: 'Test User',
                     email: 'invalid-email',
                     password: 'password123',
-                    role: 'customer'
+                    role: 'staff'
                 });
 
             expect(res.statusCode).toBe(500);
@@ -87,7 +87,7 @@ describe('Auth Endpoints', () => {
                     name: 'Test User',
                     email: 'shortpass@example.com',
                     password: '123',
-                    role: 'customer'
+                    role: 'staff'
                 });
 
             expect(res.statusCode).toBe(500);
@@ -115,7 +115,7 @@ describe('Auth Endpoints', () => {
                     name: 'Login User',
                     email: 'login@example.com',
                     password: 'password123',
-                    role: 'customer'
+                    role: 'staff'
                 });
 
             // Then login
@@ -139,7 +139,7 @@ describe('Auth Endpoints', () => {
                     name: 'Login User 2',
                     email: 'login2@example.com',
                     password: 'password123',
-                    role: 'customer'
+                    role: 'staff'
                 });
 
             const res = await request(app)

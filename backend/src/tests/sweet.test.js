@@ -45,18 +45,7 @@ describe('Sweet Endpoints', () => {
         });
         staffToken = staffLogin.body.token;
 
-        // Register Customer
-        await request(app).post('/api/auth/register').send({
-            name: 'Sweet Customer',
-            email: 'customer@sweets.com',
-            password: 'password123',
-            role: 'customer'
-        });
-        const customerLogin = await request(app).post('/api/auth/login').send({
-            email: 'customer@sweets.com',
-            password: 'password123'
-        });
-        customerToken = customerLogin.body.token;
+
     });
 
     afterAll(async () => {
@@ -99,17 +88,7 @@ describe('Sweet Endpoints', () => {
             expect(res.statusCode).toBe(201);
         });
 
-        it('should fail creation if Customer (Forbidden)', async () => {
-            const res = await request(app)
-                .post('/api/sweets')
-                .set('Authorization', `Bearer ${customerToken}`)
-                .send({
-                    name: 'Forbidden Sweet',
-                    price: 100
-                });
 
-            expect(res.statusCode).toBe(403);
-        });
 
         it('should fail if fields are missing', async () => {
             const res = await request(app)
@@ -153,10 +132,10 @@ describe('Sweet Endpoints', () => {
     });
 
     describe('Inventory Operations', () => {
-        it('should allow customer to purchase sweet', async () => {
+        it('should allow staff to purchase sweet', async () => {
             const res = await request(app)
                 .post(`/api/sweets/${sweetId}/purchase`)
-                .set('Authorization', `Bearer ${customerToken}`)
+                .set('Authorization', `Bearer ${staffToken}`)
                 .send({ quantity: 5 });
 
             expect(res.statusCode).toBe(200);
@@ -166,7 +145,7 @@ describe('Sweet Endpoints', () => {
         it('should fail purchase if insufficient stock', async () => {
             const res = await request(app)
                 .post(`/api/sweets/${sweetId}/purchase`)
-                .set('Authorization', `Bearer ${customerToken}`)
+                .set('Authorization', `Bearer ${staffToken}`)
                 .send({ quantity: 1000 });
 
             expect(res.statusCode).toBe(400); // Bad Request
@@ -182,14 +161,7 @@ describe('Sweet Endpoints', () => {
             expect(res.body.stockQuantity).toBe(145); // 95 + 50
         });
 
-        it('should fail restock if Customer (Forbidden)', async () => {
-            const res = await request(app)
-                .post(`/api/sweets/${sweetId}/restock`)
-                .set('Authorization', `Bearer ${customerToken}`)
-                .send({ quantity: 10 });
 
-            expect(res.statusCode).toBe(403);
-        });
     });
 
     describe('Search Sweets', () => {
@@ -231,7 +203,7 @@ describe('Sweet Endpoints', () => {
         it('should return 404 when purchasing non-existent sweet', async () => {
             const res = await request(app)
                 .post(`/api/sweets/${nonExistentId}/purchase`)
-                .set('Authorization', `Bearer ${customerToken}`)
+                .set('Authorization', `Bearer ${staffToken}`)
                 .send({ quantity: 1 });
             expect(res.statusCode).toBe(404);
         });

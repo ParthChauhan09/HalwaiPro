@@ -23,7 +23,7 @@ describe('User Repository Generic Methods', () => {
             name: 'Repo Test User',
             email: 'repo@test.com',
             password: 'password123',
-            role: 'customer'
+            role: 'staff'
         });
         expect(user).toHaveProperty('_id');
 

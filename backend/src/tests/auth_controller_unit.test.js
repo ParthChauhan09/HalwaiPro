@@ -33,7 +33,7 @@ describe('Auth Controller Unit Tests (Error Handling)', () => {
     });
 
     it('register should call next(error) on service error', async () => {
-        req.body = { name: 'Test', email: 'test@test.com', password: 'password', role: 'customer' };
+        req.body = { name: 'Test', email: 'test@test.com', password: 'password', role: 'staff' };
         const error = new Error('Service Error');
         mockUserService.register.mockRejectedValue(error);
 

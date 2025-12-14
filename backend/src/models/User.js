@@ -29,13 +29,13 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['staff', 'admin', 'customer'],
+        enum: ['staff', 'admin'],
         default: 'staff'
     }
 },
-{
-    timestamps: true
-}
+    {
+        timestamps: true
+    }
 );
 
 
