@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
-import { Package, AlertTriangle, TrendingUp, DollarSign } from 'lucide-react';
+import { Package, AlertTriangle, TrendingUp, DollarSign, Plus } from 'lucide-react';
+import AddSweetModal from '../components/sweets/AddSweetModal';
 
 const Dashboard = () => {
     const [sweets, setSweets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showLowStockOnly, setShowLowStockOnly] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     const fetchSweets = async () => {
         try {
@@ -56,10 +58,25 @@ const Dashboard = () => {
     return (
         <div className="min-h-screen bg-bakery-cream p-8 font-sans">
             <div className="max-w-7xl mx-auto">
-                <header className="mb-8">
-                    <h1 className="text-3xl font-bold text-bakery-brown">Dashboard</h1>
-                    <p className="text-bakery-light-brown transform translate-y-1">Welcome back, Admin</p>
+                <header className="mb-8 flex justify-between items-start">
+                    <div>
+                        <h1 className="text-3xl font-bold text-bakery-brown">Dashboard</h1>
+                        <p className="text-bakery-light-brown transform translate-y-1">Welcome back, Admin</p>
+                    </div>
+                    <button
+                        onClick={() => setIsAddModalOpen(true)}
+                        className="bg-bakery-orange text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-bakery-orange/20 hover:bg-bakery-brown transition-all duration-300 flex items-center gap-2 transform hover:-translate-y-0.5 active:scale-95"
+                    >
+                        <Plus className="w-5 h-5" />
+                        Add Product
+                    </button>
                 </header>
+
+                <AddSweetModal
+                    isOpen={isAddModalOpen}
+                    onClose={() => setIsAddModalOpen(false)}
+                    onSuccess={fetchSweets}
+                />
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

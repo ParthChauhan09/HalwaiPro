@@ -28,7 +28,7 @@ const Navbar = () => {
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-white">
                             <User size={20} />
                             <span className="text-sm font-medium">{user?.name}</span>
                         </div>
