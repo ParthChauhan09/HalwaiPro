@@ -5,6 +5,7 @@ import Layout from './components/layout/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import SweetsList from './pages/SweetsList';
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
 
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/sweets" element={<SweetsList />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
