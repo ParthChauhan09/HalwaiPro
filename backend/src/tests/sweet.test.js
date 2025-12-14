@@ -2,6 +2,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import app from '../app.js';
 import config from '../config/env.js';
+import User from '../models/User.js';
 
 describe('Sweet Endpoints', () => {
     let adminToken;
@@ -20,7 +21,8 @@ describe('Sweet Endpoints', () => {
         }
 
         // Register Admin
-        await request(app).post('/api/auth/register').send({
+        // Register Admin - Create directly in DB to ensure admin role
+        await User.create({
             name: 'Sweet Admin',
             email: 'admin@sweets.com',
             password: 'password123',
