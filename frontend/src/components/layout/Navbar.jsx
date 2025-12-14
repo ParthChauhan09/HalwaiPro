@@ -6,18 +6,25 @@ const Navbar = () => {
     const { user, logout } = useAuth();
 
     return (
-        <nav className="bg-white border-b border-gray-200">
+        <nav className="bg-bakery-brown text-bakery-cream shadow-lg">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
-                    <div className="flex items-center gap-6">
-                        <Link to="/" className="flex items-center gap-2">
-                            <Store className="h-8 w-8 text-indigo-600" />
-                            <span className="text-xl font-bold text-gray-900">HalwaiPro</span>
+                <div className="flex items-center justify-between h-20">
+                    <div className="flex items-center">
+                        <Link to="/" className="flex items-center space-x-2 group">
+                            <img
+                                src="/halwaipro.png" // Assuming 'halwai.png' is in the public folder and accessible at the root.
+                                alt="HalwaiPro Logo"
+                                className="h-10 w-auto" // Adjust height as needed
+                            />
+                            <span className="text-2xl font-bold font-sans tracking-wide group-hover:text-bakery-orange transition-colors">
+                                HalwaiPro
+                            </span>
                         </Link>
-                        <div className="hidden md:flex gap-4">
-                            <Link to="/sweets" className="text-gray-600 hover:text-gray-900 font-medium">
-                                Sweets
-                            </Link>
+                        <div className="hidden md:block">
+                            <div className="ml-10 flex items-baseline space-x-4">
+                                <Link to="/dashboard" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-bakery-light-brown hover:text-white transition-colors">Dashboard</Link>
+                                <Link to="/sweets" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-bakery-light-brown hover:text-white transition-colors">Sweets</Link>
+                            </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">

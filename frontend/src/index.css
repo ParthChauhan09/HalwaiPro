@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@theme {
+  --color-bakery-brown: #4A2C21;
+  --color-bakery-cream: #FDF8F5;
+  --color-bakery-orange: #F4A261;
+  --color-bakery-light-brown: #8D6E63;
+  --color-bakery-gold: #E9C46A;
+
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
