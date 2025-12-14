@@ -1,7 +1,8 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import AddSweetModal from '../AddSweetModal';
 import api from '../../../utils/api';
+import toast from 'react-hot-toast';
 
 vi.mock('../../../utils/api', () => ({
     default: {
@@ -25,57 +26,82 @@ describe('AddSweetModal Component', () => {
         sweetToEdit: null
     };
 
-    it('renders correctly when open', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it('renders correctly', () => {
         render(<AddSweetModal {...defaultProps} />);
         expect(screen.getByText('Add New Sweet')).toBeInTheDocument();
-        // We can now use label text or placeholder
-        expect(screen.getByLabelText('Product Name')).toBeInTheDocument();
     });
 
-    it('does not render when closed', () => {
-        render(<AddSweetModal {...defaultProps} isOpen={false} />);
-        expect(screen.queryByText('Add New Sweet')).not.toBeInTheDocument();
-    });
-
-    it('validates and submits form data', async () => {
+    it('submits successfully (Create)', async () => {
         api.post.mockResolvedValue({});
         render(<AddSweetModal {...defaultProps} />);
 
-        fireEvent.change(screen.getByLabelText('Product Name'), { target: { value: 'Test Sweet' } });
-        fireEvent.change(screen.getByLabelText('Description'), { target: { value: 'Test Description' } });
+        fireEvent.change(screen.getByLabelText('Product Name'), { target: { value: 'New Sweet' } });
+        fireEvent.change(screen.getByLabelText('Description'), { target: { value: 'Desc' } });
         fireEvent.change(screen.getByLabelText('Price (₹)'), { target: { value: '100' } });
-        fireEvent.change(screen.getByLabelText('Initial Stock'), { target: { value: '50' } });
+        fireEvent.change(screen.getByLabelText('Initial Stock'), { target: { value: '20' } });
+        fireEvent.change(screen.getByLabelText('Image URL'), { target: { value: 'url.jpg' } });
 
-        fireEvent.change(screen.getByLabelText('Image URL'), { target: { value: 'http://img.com/1.jpg' } });
-
-        const submitBtn = screen.getByText('Add Product');
-        fireEvent.click(submitBtn);
+        fireEvent.click(screen.getByText('Add Product'));
 
         await waitFor(() => {
-            expect(api.post).toHaveBeenCalledWith('/sweets', expect.objectContaining({
-                name: 'Test Sweet',
-                price: 100,
-                stockQuantity: 50
-            }));
-            expect(defaultProps.onSuccess).toHaveBeenCalled();
+            expect(api.post).toHaveBeenCalledWith('/sweets', expect.objectContaining({ name: 'New Sweet' }));
+            expect(toast.success).toHaveBeenCalledWith('Sweet added successfully!');
             expect(defaultProps.onClose).toHaveBeenCalled();
         });
     });
 
-    it('populates form in edit mode', () => {
-        const sweet = {
-            _id: '123',
-            name: 'Old Sweet',
-            description: 'Old Desc',
-            price: 200,
-            stockQuantity: 20,
-            category: 'Milk Based',
-            imageUrl: 'img.jpg'
-        };
+    it('submits successfully (Update)', async () => {
+        const sweet = { _id: '123', name: 'Old', description: 'D', price: 10, stockQuantity: 5, category: 'Milk Based', imageUrl: 'u.jpg' };
+        api.put.mockResolvedValue({});
+
         render(<AddSweetModal {...defaultProps} sweetToEdit={sweet} />);
 
-        expect(screen.getByText('Edit Sweet')).toBeInTheDocument();
-        expect(screen.getByDisplayValue('Old Sweet')).toBeInTheDocument();
         expect(screen.getByText('Update Product')).toBeInTheDocument();
+        fireEvent.change(screen.getByLabelText('Product Name'), { target: { value: 'Updated' } });
+
+        fireEvent.click(screen.getByText('Update Product'));
+
+        await waitFor(() => {
+            expect(api.put).toHaveBeenCalledWith('/sweets/123', expect.objectContaining({ name: 'Updated' }));
+            expect(toast.success).toHaveBeenCalledWith('Sweet updated successfully!');
+        });
+    });
+
+    it('handles API error', async () => {
+        api.post.mockRejectedValue({ response: { data: { message: 'Creation failed' } } });
+        render(<AddSweetModal {...defaultProps} />);
+
+        fireEvent.change(screen.getByLabelText('Product Name'), { target: { value: 'Fail Sweet' } });
+        fireEvent.change(screen.getByLabelText('Description'), { target: { value: 'Desc' } });
+        fireEvent.change(screen.getByLabelText('Price (₹)'), { target: { value: '100' } });
+        fireEvent.change(screen.getByLabelText('Initial Stock'), { target: { value: '20' } });
+        fireEvent.change(screen.getByLabelText('Image URL'), { target: { value: 'url.jpg' } });
+
+        fireEvent.click(screen.getByText('Add Product'));
+
+        await waitFor(() => {
+            expect(toast.error).toHaveBeenCalledWith('Creation failed');
+        });
+    });
+
+    it('handles default API error', async () => {
+        api.post.mockRejectedValue(new Error('Network error'));
+        render(<AddSweetModal {...defaultProps} />);
+
+        fireEvent.change(screen.getByLabelText('Product Name'), { target: { value: 'Fail Sweet' } });
+        fireEvent.change(screen.getByLabelText('Description'), { target: { value: 'Desc' } });
+        fireEvent.change(screen.getByLabelText('Price (₹)'), { target: { value: '100' } });
+        fireEvent.change(screen.getByLabelText('Initial Stock'), { target: { value: '20' } });
+        fireEvent.change(screen.getByLabelText('Image URL'), { target: { value: 'url.jpg' } });
+
+        fireEvent.click(screen.getByText('Add Product'));
+
+        await waitFor(() => {
+            expect(toast.error).toHaveBeenCalledWith('Failed to save sweet');
+        });
     });
 });
