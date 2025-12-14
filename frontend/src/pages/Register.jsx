@@ -1,29 +1,22 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Store, ChevronDown, Loader2 } from 'lucide-react';
+import { Store, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('staff');
-    const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { register } = useAuth();
     const navigate = useNavigate();
 
-    const roles = [
-        { id: 'staff', name: 'Staff' },
-        { id: 'admin', name: 'Admin' }
-    ];
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const { success } = await register({ name, email, password, role });
+            const { success } = await register({ name, email, password });
             if (success) {
                 navigate('/');
             }
@@ -108,44 +101,7 @@ const Register = () => {
                             </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                                Role
-                            </label>
-                            <div className="mt-1 relative">
-                                <button
-                                    type="button"
-                                    className="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    onClick={() => setIsRoleOpen(!isRoleOpen)}
-                                >
-                                    <span className="block truncate">{roles.find(r => r.id === role)?.name}</span>
-                                    <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                        <ChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                                    </span>
-                                </button>
 
-                                {isRoleOpen && (
-                                    <ul className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                                        {roles.map((option) => (
-                                            <li
-                                                key={option.id}
-                                                className={`${role === option.id ? 'text-white bg-indigo-600' : 'text-gray-900'
-                                                    } cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white`}
-                                                onClick={() => {
-                                                    setRole(option.id);
-                                                    setIsRoleOpen(false);
-                                                }}
-                                            >
-                                                <span className={`block truncate ${role === option.id ? 'font-semibold' : 'font-normal'}`}>
-                                                    {option.name}
-                                                </span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-                                <input type="hidden" name="role" value={role} />
-                            </div>
-                        </div>
 
                         <div>
                             <button

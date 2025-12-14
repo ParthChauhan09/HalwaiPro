@@ -3,14 +3,14 @@ import userService from '../services/user.service.js';
 class AuthController {
     async register(req, res, next) {
         try {
-            const { name, email, password, role } = req.body;
+            const { name, email, password } = req.body;
 
             // Basic validation
             if (!email || !password || !name) {
                 return res.status(400).json({ message: 'Missing required fields' });
             }
 
-            const result = await userService.register({ name, email, password, role });
+            const result = await userService.register({ name, email, password });
 
             res.status(201).json(result);
         } catch (error) {
